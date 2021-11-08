@@ -353,7 +353,8 @@
   <div class="email-manager-container">
     <h2>All Addresses</h2>
     <app-email-manager
-      [allAddresses]="emailAddresses">
+      [allAddresses]="emailAddresses"
+      [emailDisplayCount]="10">
     </app-email-manager>
 
     <h2>Show Invalid Addresses</h2>
@@ -383,8 +384,9 @@
       [displayOnly]="true">
     </app-email-manager>
 
-    <h2>All addresses prevent dupes</h2>
+    <h2>All addresses prevent dupes (some custom styles)</h2>
     <app-email-manager
+      class="prevent-dupes-email-manager"
       [allAddresses]="emailAddresses"
       [preventDuplicates]="true">
     </app-email-manager>

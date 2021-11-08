@@ -25,7 +25,9 @@
       <div
         *ngFor="let address of list; let i = index"
         class="address-tag flex-row"
-        [class.invalid]="address.invalid">
+        [class.invalid]="address.invalid"
+        [title]="address.email"
+        (click)="onEditEmail(address, i)">
         <span class="email-address">{{address.email}}</span>
         <button
           *ngIf="!displayOnly"

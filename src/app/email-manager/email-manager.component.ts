@@ -52,10 +52,13 @@ export class EmailManagerComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private _formArrayListener: Subscription;
   dupeMsg: string = '';
+  editing: boolean = false;
+  editingIdx: number = -1;
+  showingAllAddresses: boolean = false;
 
   @ViewChild('inputElement') inputEl: ElementRef<HTMLInputElement>;
 
-  constructor() { }
+  constructor() {}
 
   ngOnInit(): void {
     if (this.formArrayControl) {
@@ -113,7 +116,13 @@ export class EmailManagerComponent implements OnInit, OnDestroy, AfterViewInit {
       if (evt.keyCode !== 13) {
         email = email.substr(0, email.length - 1);
       }
-      this.addAddress(email);
+      if (!this.editing) {
+        this.addAddress(email);
+      }else{
+        this.editAddress(email, this.editingIdx);
+        this.editing = false;
+        this.editingIdx = -1;
+      }
       this.inputEl.nativeElement.value = '';
     }
   }
@@ -140,11 +149,26 @@ export class EmailManagerComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       }
       if (isDupe) {
-        this.dupeAddedEvt.emit(emailAddress);
         this.dupeMsg = `${emailAddress} is a duplicate and was not added!`;
+      }
+      if (dupe) {
+        this.dupeAddedEvt.emit(emailAddress);
       }
       this.addEvt.emit(emailAddress);
       this.inputEl.nativeElement.value = '';
+    }
+  }
+
+  editAddress(newEmailAddress: string, idx: number) {
+    const addr = this.formArrayControl ? this.formArrayControl.at(idx)?.value : this.allAddresses[idx];
+    addr.email = newEmailAddress;
+    if (this.formArrayControl) {
+      const ctrl = this.formArrayControl.at(idx);
+      ctrl?.get('email')?.setValue(addr?.email);
+      ctrl?.updateValueAndValidity();
+      ctrl?.get('invalid')?.setValue(ctrl?.invalid);
+    }else{
+      addr.invalid = this.validate(addr.email);
     }
   }
 
@@ -185,4 +209,9 @@ export class EmailManagerComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  onEditEmail(address: EmailManagerAddress, idx: number) {
+    this.inputEl.nativeElement.value = address.email;
+    this.editing = true;
+    this.editingIdx = idx;
+  }
 }

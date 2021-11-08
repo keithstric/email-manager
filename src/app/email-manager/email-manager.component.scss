@@ -29,20 +29,34 @@
       margin-bottom: 0.5rem;
       font-size: var(--tag-font-size, 0.8rem);
 
+      &:hover {
+        cursor: pointer;
+      }
+
       &.invalid {
         background-color: var(--tag-invalid-background-color, red);
         color: var(--tag-invalid-color, white);
         border: 1px solid var(--tag-invalid-border-color, red);
       }
 
-      .email-address {}
+      .email-address {
+        max-width: 150px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
 
       .delete-button {
+        display: flex;
+        align-content: center;
+        justify-content: center;
         margin-left: var(--delete-button-margin-left, 10px);
-        padding: 0;
-        background-color: transparent;
-        border-width: 0;
+        padding: var(--delete-tag-button-padding, 0);
+        background-color: var(--delete-tag-button-background-color, transparent);
+        border-width: var(--delete-tag-button-border-width, 0);
+        border-radius: var(--delete-tag-button-border-radius, 0);
+        border-color: var(--delete-tag-button-border-color, transparent);
         color: var(--delete-tag-button-color, inherit);
+        font-size: var(--delete-tag-button-font-size, inherit);
 
         &:hover {
           cursor: pointer;

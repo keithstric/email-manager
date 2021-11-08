@@ -5,5 +5,20 @@
 
   .email-manager-container {
     width: 600px;
+
+    .prevent-dupes-email-manager {
+      --duplicate-message-color: orange;
+      --tag-background-color: teal;
+      --tag-invalid-color: black;
+      --tag-invalid-background-color: orange;
+      --tag-invalid-border-color: orange;
+      --tag-font-size: 0.6rem;
+      --tag-padding: 0 5px;
+      --delete-tag-button-border-radius: 50%;
+      --delete-tag-button-background-color: white;
+      --delete-tag-button-color: black;
+      --delete-tag-button-padding: 4px;
+      --delete-tag-button-border-width: 1px;
+    }
   }
 }
