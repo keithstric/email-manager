@@ -1,0 +1,39 @@
+<div class="email-manager-container flex-column">
+  <input
+    #inputElement
+    *ngIf="!displayOnly"
+    placeholder="Add an email address" />
+  <div *ngIf="preventDuplicates" class="dupe-message">{{dupeMsg}}</div>
+  <ng-container
+    [ngTemplateOutlet]="addressesTemplate"
+    [ngTemplateOutletContext]="showInvalidContainer
+      ? {addresses: validAddresses, label: validContainerLabel}
+      : {addresses: allAddresses, label: allContainerLabel}">
+  </ng-container>
+  <ng-container
+    *ngIf="showInvalidContainer"
+    [ngTemplateOutlet]="addressesTemplate"
+    [ngTemplateOutletContext]="{addresses: invalidAddresses, label: invalidContainerLabel}">
+  </ng-container>
+</div>
+
+<!-- Since all lists should show the same UI just use a template -->
+<ng-template #addressesTemplate let-list="addresses" let-label="label">
+  <div *ngIf="list.length" class="flex-column">
+    <div class="container-label">{{label}}</div>
+    <div class="address-container flex-row">
+      <div
+        *ngFor="let address of list; let i = index"
+        class="address-tag flex-row"
+        [class.invalid]="address.invalid">
+        <span class="email-address">{{address.email}}</span>
+        <button
+          *ngIf="!displayOnly"
+          class="btn delete-button"
+          (click)="onDeleteAddress($event, address)">
+          X
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>
