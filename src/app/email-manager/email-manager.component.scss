@@ -70,6 +70,15 @@
     font-weight: var(--container-label-font-weight, 400);
     padding: var(--container-label-padding, 0);
   }
+
+  .show-more-link {
+    color: var(--show-more-link-color, blue);
+    text-decoration: var(--show-more-link-text-decoration, underline);
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
 }
 
 .flex-column {

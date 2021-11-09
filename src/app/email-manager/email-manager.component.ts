@@ -17,6 +17,12 @@ export interface EmailManagerAddress {
   invalid: boolean;
 }
 
+export interface ListInfo {
+  addresses: EmailManagerAddress[];
+  showMore: boolean;
+  label: string;
+}
+
 @Component({
   selector: 'app-email-manager',
   templateUrl: './email-manager.component.html',
@@ -27,7 +33,7 @@ export class EmailManagerComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() formArrayControl: FormArray;
   /** should return true if invalid **/
   @Input() validator: (emailAddress: string) => boolean;
-  /** The number of email addresses to display */
+  /** The number of email addresses to display, not currently implemented */
   @Input() emailDisplayCount: number = 15;
   /** Set to true to show a separate container of invalid addresses */
   @Input() showInvalidContainer: boolean = false;
@@ -55,6 +61,7 @@ export class EmailManagerComponent implements OnInit, OnDestroy, AfterViewInit {
   editing: boolean = false;
   editingIdx: number = -1;
   showingAllAddresses: boolean = false;
+  displayAddresses: ListInfo;
 
   @ViewChild('inputElement') inputEl: ElementRef<HTMLInputElement>;
 
@@ -66,6 +73,8 @@ export class EmailManagerComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     const allAddrs = this.formArrayControl ? this.formArrayControl.value : this.allAddresses;
     this.allAddresses = this._parseAddresses(allAddrs);
+    const addresses = this.allAddresses.slice(0, this.emailDisplayCount);
+    this.displayAddresses = {addresses, label: this.allContainerLabel, showMore: this.allAddresses.length > addresses.length};
   }
 
   ngAfterViewInit() {
@@ -78,14 +87,36 @@ export class EmailManagerComponent implements OnInit, OnDestroy, AfterViewInit {
     this._formArrayListener?.unsubscribe();
   }
 
+  get validAddressesTotal() {
+    const addrs = this.formArrayControl ? this.formArrayControl.value : this.allAddresses;
+    return addrs.filter(addr => !addr.invalid).length;
+  }
+
+  get invalidAddressesTotal() {
+    const addrs = this.formArrayControl ? this.formArrayControl.value : this.allAddresses;
+    return addrs.filter(addr => addr.invalid).length;
+  }
+
   get validAddresses() {
     const addrs = this.formArrayControl ? this.formArrayControl.value : this.allAddresses;
-    return addrs.filter(addr => !addr.invalid);
+    const filtered = addrs.filter(addr => !addr.invalid);
+    const showMore = filtered.length > this.emailDisplayCount;
+    if (this.showingAllAddresses) {
+      return {addresses: filtered, label: this.invalidContainerLabel, showMore};
+    }else{
+      return {addresses: filtered.slice(0, this.emailDisplayCount), label: this.invalidContainerLabel, showMore};
+    }
   }
 
   get invalidAddresses() {
     const addrs = this.formArrayControl ? this.formArrayControl.value : this.allAddresses;
-    return addrs.filter(addr => addr.invalid);
+    const filtered = addrs.filter(addr => addr.invalid);
+    const showMore = filtered.length > this.emailDisplayCount;
+    if (this.showingAllAddresses) {
+      return {addresses: filtered, label: this.invalidContainerLabel, showMore};
+    }else{
+      return {addresses: filtered.slice(0, this.emailDisplayCount), label: this.invalidContainerLabel, showMore};
+    }
   }
 
   private _listenToFormArray() {
@@ -213,5 +244,22 @@ export class EmailManagerComponent implements OnInit, OnDestroy, AfterViewInit {
     this.inputEl.nativeElement.value = address.email;
     this.editing = true;
     this.editingIdx = idx;
+  }
+
+  showAllAddresses() {
+    if (this.showingAllAddresses === true) {
+      this.displayAddresses.addresses = this.allAddresses.slice(0, this.emailDisplayCount);
+    }else{
+      this.displayAddresses.addresses = this.allAddresses;
+    }
+    this.showingAllAddresses = !this.showingAllAddresses;
+  }
+
+  showMore(listType: 'all' | 'valid' | 'invalid') {
+    if (this.showingAllAddresses) {
+
+    }else{
+
+    }
   }
 }

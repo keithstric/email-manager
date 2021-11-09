@@ -7,18 +7,18 @@
   <ng-container
     [ngTemplateOutlet]="addressesTemplate"
     [ngTemplateOutletContext]="showInvalidContainer
-      ? {addresses: validAddresses, label: validContainerLabel}
-      : {addresses: allAddresses, label: allContainerLabel}">
+      ? validAddresses
+      : displayAddresses">
   </ng-container>
   <ng-container
     *ngIf="showInvalidContainer"
     [ngTemplateOutlet]="addressesTemplate"
-    [ngTemplateOutletContext]="{addresses: invalidAddresses, label: invalidContainerLabel}">
+    [ngTemplateOutletContext]="invalidAddresses">
   </ng-container>
 </div>
 
 <!-- Since all lists should show the same UI just use a template -->
-<ng-template #addressesTemplate let-list="addresses" let-label="label">
+<ng-template #addressesTemplate let-list="addresses" let-label="label" let-showMore="showMore">
   <div *ngIf="list.length" class="flex-column">
     <div class="container-label">{{label}}</div>
     <div class="address-container flex-row">
@@ -37,5 +37,9 @@
         </button>
       </div>
     </div>
+    <a *ngIf="showMore" class="show-more-link" (click)="showAllAddresses()">
+      <span *ngIf="showingAllAddresses">Show Less...</span>
+      <span *ngIf="!showingAllAddresses">Show More...</span>
+    </a>
   </div>
 </ng-template>
