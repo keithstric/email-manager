@@ -14,7 +14,7 @@ export class AppComponent implements OnInit {
     {email: 'dr.strange@avengers.net', invalid: false},
     {email: 'black.widow', invalid: false},
     {email: 'black.widow@avengers.net', invalid: false},
-    {email: 'ant.man@avengers.net', invalid: false},
+    {email: 'ant.man@avengers.com', invalid: false},
     {email: 'hulk@avengers', invalid: false},
     {email: 'thor@avengers.com', invalid: false},
     {email: 'the.collector@knowhere.net', invalid: false},
@@ -57,9 +57,9 @@ export class AppComponent implements OnInit {
    */
   jsEmailValidator(emailAddress: string) {
     const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    const properFormat = !emailRegex.test(emailAddress);
-    const isAvengers = !emailAddress.includes('avengers.net');
-    return properFormat === true && isAvengers === true;
+    const improperFormat = !emailRegex.test(emailAddress);
+    const notAvengers = !emailAddress.includes('avengers.net');
+    return improperFormat === true || notAvengers === true;
   }
 
   sortAddresses(addr1: EmailManagerAddress, addr2: EmailManagerAddress) {
