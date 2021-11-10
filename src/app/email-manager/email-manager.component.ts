@@ -153,6 +153,9 @@ export class EmailManagerComponent implements OnInit, OnDestroy, AfterViewInit {
     this.allAddresses = this._parseAddresses(allAddrs).sort(this.sortFunc);
     const addresses = this.allAddresses.slice(0, this.emailDisplayCount);
     this.displayAddresses = {addresses, label: this.allContainerLabel, showMore: this.allAddresses.length > addresses.length};
+    if (this.showingAllAddresses) {
+      this.showAllAddresses();
+    }
   }
 
   addAddress(emailAddress: string) {
