@@ -17,7 +17,7 @@ export interface EmailManagerAddress {
   invalid: boolean;
 }
 
-export interface ListInfo {
+interface ListInfo {
   addresses: EmailManagerAddress[];
   showMore: boolean;
   label: string;
@@ -39,7 +39,7 @@ export class EmailManagerComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() showInvalidContainer: boolean = false;
   /** Set to true to hide the input field */
   @Input() displayOnly: boolean = false;
-  /** Array of email addresses */
+  /** Array of [EmailManagerAddress]{@link EmailManagerAddress} */
   @Input() allAddresses: EmailManagerAddress[] = [];
   /** The label to show above the all addresses container */
   @Input() allContainerLabel: string = '';
@@ -179,7 +179,7 @@ export class EmailManagerComponent implements OnInit, OnDestroy, AfterViewInit {
     const addresses = this.allAddresses.slice(0, this.emailDisplayCount);
     this.displayAddresses = {addresses, label: this.allContainerLabel, showMore: this.allAddresses.length > addresses.length};
     if (this.showingAllAddresses) {
-      this.showAllAddresses();
+      this.onShowAllAddresses();
     }
   }
 
@@ -312,7 +312,10 @@ export class EmailManagerComponent implements OnInit, OnDestroy, AfterViewInit {
     this.editing = true;
   }
 
-  showAllAddresses() {
+  /**
+   * Fired when the show more/less link is clicked
+   */
+  onShowAllAddresses() {
     if (this.showingAllAddresses === true) {
       this.displayAddresses.addresses = this.allAddresses.slice(0, this.emailDisplayCount);
     }else{
