@@ -3,10 +3,10 @@ import {
   Component,
   ElementRef,
   EventEmitter,
-  Input, OnChanges,
+  Input,
   OnDestroy,
   OnInit,
-  Output, SimpleChanges,
+  Output,
   ViewChild
 } from '@angular/core';
 import {FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
@@ -86,6 +86,9 @@ export class EmailManagerComponent implements OnInit, OnDestroy, AfterViewInit {
     this._formArrayListener?.unsubscribe();
   }
 
+  /**
+   * The valid addresses
+   */
   get validAddresses() {
     const addrs = this.formArrayControl ? this.formArrayControl.value : this.allAddresses;
     const filtered = addrs.filter(addr => !addr.invalid);
@@ -97,6 +100,9 @@ export class EmailManagerComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  /**
+   * The invalid addresses
+   */
   get invalidAddresses() {
     const addrs = this.formArrayControl ? this.formArrayControl.value : this.allAddresses;
     const filtered = addrs.filter(addr => addr.invalid);
@@ -108,6 +114,10 @@ export class EmailManagerComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  /**
+   * Listen to the formArrayControl and updates allAddresses when the value changes
+   * @private
+   */
   private _listenToFormArray() {
     if (!this._formArrayListener) {
       this._formArrayListener = this.formArrayControl?.valueChanges
@@ -118,6 +128,11 @@ export class EmailManagerComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  /**
+   * Parses the array of email addresses and updates the invalid property
+   * @param addresses
+   * @private
+   */
   private _parseAddresses(addresses: EmailManagerAddress[]) {
     if (addresses?.length) {
       return addresses.map((addr, idx) => {
@@ -130,6 +145,11 @@ export class EmailManagerComponent implements OnInit, OnDestroy, AfterViewInit {
     return addresses;
   }
 
+  /**
+   * Listens for keyup on the input field
+   * @param evt
+   * @private
+   */
   private _keyupListener(evt: KeyboardEvent) {
     this.dupeMsg = '';
     if (evt.keyCode === 188 || evt.keyCode === 32 || evt.keyCode === 13) {
@@ -148,6 +168,10 @@ export class EmailManagerComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  /**
+   * Update allAddresses and displayAddresses
+   * @private
+   */
   private _updateAddresses() {
     // Don't like this as it loops multiple times through the array of addresses
     const allAddrs = this.formArrayControl ? this.formArrayControl.value : this.allAddresses;
@@ -159,6 +183,10 @@ export class EmailManagerComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  /**
+   * Fired from the _keyupListener after comma, enter or space is entered if editing = false
+   * @param emailAddress
+   */
   addAddress(emailAddress: string) {
     if (emailAddress) {
       const dupe = !!this.allAddresses.find(addr => addr.email === emailAddress);
@@ -192,6 +220,11 @@ export class EmailManagerComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  /**
+   * Fired from the _keyupListener after comma, enter or space is entered if editing = true
+   * @param newEmailAddress
+   * @param idx
+   */
   editAddress(newEmailAddress: string, idx: number) {
     const addr = this.formArrayControl ? this.formArrayControl.at(idx)?.value : this.allAddresses[idx];
     addr.email = newEmailAddress;
@@ -206,6 +239,11 @@ export class EmailManagerComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  /**
+   * Get an entry
+   * @param address
+   * @param list
+   */
   getEntry(address: EmailManagerAddress, list: EmailManagerAddress[] = this.allAddresses) {
     let foundIdx = -1;
     const email = list.find((addr, idx) => {
@@ -218,20 +256,33 @@ export class EmailManagerComponent implements OnInit, OnDestroy, AfterViewInit {
     return {idx: foundIdx, email};
   }
 
+  /**
+   * Fired when the delete button is clicked
+   * @param evt
+   * @param address
+   */
   onDeleteAddress(evt: MouseEvent, address: EmailManagerAddress) {
     evt.stopPropagation();
     const foundInAll = this.getEntry(address);
     if (foundInAll?.idx > -1) {
       this.allAddresses.splice(foundInAll.idx, 1);
-      this._updateAddresses();
       if (this.formArrayControl) {
         this.formArrayControl.removeAt(foundInAll.idx);
+      }else{
+        this._updateAddresses();
       }
       this.deleteEvt.emit(foundInAll.email.email);
       this.inputEl.nativeElement.value = '';
     }
   }
 
+  /**
+   * If there is a validator provided as the validator @Input, use that
+   * otherwise, just check the format
+   *
+   * regex from http://emailregex.com/
+   * @param emailAddress
+   */
   validate(emailAddress: string) {
     if (this.validator) {
       return this.validator(emailAddress);
@@ -245,10 +296,20 @@ export class EmailManagerComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  onEditEmail(address: EmailManagerAddress, idx: number) {
+  /**
+   * Fired when an address tag is clicked
+   * @param address
+   */
+  onEditEmail(address: EmailManagerAddress) {
     this.inputEl.nativeElement.value = address.email;
+    this.allAddresses.find((addr, idx) => {
+      if (addr.email === address.email) {
+        this.editingIdx = idx;
+        return true;
+      }
+      return false;
+    });
     this.editing = true;
-    this.editingIdx = idx;
   }
 
   showAllAddresses() {
