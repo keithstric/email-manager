@@ -3,10 +3,10 @@ import {
   Component,
   ElementRef,
   EventEmitter,
-  Input,
+  Input, OnChanges,
   OnDestroy,
   OnInit,
-  Output,
+  Output, SimpleChanges,
   ViewChild
 } from '@angular/core';
 import {FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
@@ -34,7 +34,7 @@ export class EmailManagerComponent implements OnInit, OnDestroy, AfterViewInit {
   /** should return true if invalid **/
   @Input() validator: (emailAddress: string) => boolean;
   /** The number of email addresses to display, not currently implemented */
-  @Input() emailDisplayCount: number = 15;
+  @Input() emailDisplayCount: number = 20;
   /** Set to true to show a separate container of invalid addresses */
   @Input() showInvalidContainer: boolean = false;
   /** Set to true to hide the input field */
@@ -49,6 +49,8 @@ export class EmailManagerComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() invalidContainerLabel: string = 'Invalid Email Addresses';
   /** Set to true to not add a duplicate addresses and display an error if attempted */
   @Input() preventDuplicates: boolean = false;
+  /** Include a sort function to sort the email addresses */
+  @Input() sortFunc: (addr1: EmailManagerAddress, addr2: EmailManagerAddress) => number;
 
   @Output() addEvt: EventEmitter<string> = new EventEmitter<string>();
   @Output() deleteEvt: EventEmitter<string> = new EventEmitter<string>();
@@ -71,10 +73,7 @@ export class EmailManagerComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.formArrayControl) {
       this._listenToFormArray();
     }
-    const allAddrs = this.formArrayControl ? this.formArrayControl.value : this.allAddresses;
-    this.allAddresses = this._parseAddresses(allAddrs);
-    const addresses = this.allAddresses.slice(0, this.emailDisplayCount);
-    this.displayAddresses = {addresses, label: this.allContainerLabel, showMore: this.allAddresses.length > addresses.length};
+    this._updateAddresses();
   }
 
   ngAfterViewInit() {
@@ -113,7 +112,7 @@ export class EmailManagerComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!this._formArrayListener) {
       this._formArrayListener = this.formArrayControl?.valueChanges
         .subscribe((newValue: EmailManagerAddress[]) => {
-          this.allAddresses = newValue;
+          this.allAddresses = [...newValue];
         });
     }
   }
@@ -148,6 +147,14 @@ export class EmailManagerComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  private _updateAddresses() {
+    // Don't like this as it loops multiple times through the array of addresses
+    const allAddrs = this.formArrayControl ? this.formArrayControl.value : this.allAddresses;
+    this.allAddresses = this._parseAddresses(allAddrs).sort(this.sortFunc);
+    const addresses = this.allAddresses.slice(0, this.emailDisplayCount);
+    this.displayAddresses = {addresses, label: this.allContainerLabel, showMore: this.allAddresses.length > addresses.length};
+  }
+
   addAddress(emailAddress: string) {
     if (emailAddress) {
       const dupe = !!this.allAddresses.find(addr => addr.email === emailAddress);
@@ -167,6 +174,7 @@ export class EmailManagerComponent implements OnInit, OnDestroy, AfterViewInit {
           this.formArrayControl.push(newFg);
         } else {
           this.allAddresses.push(newAddr);
+          this._updateAddresses();
         }
       }
       if (isDupe) {
@@ -190,6 +198,7 @@ export class EmailManagerComponent implements OnInit, OnDestroy, AfterViewInit {
       ctrl?.get('invalid')?.setValue(ctrl?.invalid);
     }else{
       addr.invalid = this.validate(addr.email);
+      this._updateAddresses();
     }
   }
 
@@ -210,6 +219,7 @@ export class EmailManagerComponent implements OnInit, OnDestroy, AfterViewInit {
     const foundInAll = this.getEntry(address);
     if (foundInAll?.idx > -1) {
       this.allAddresses.splice(foundInAll.idx, 1);
+      this._updateAddresses();
       if (this.formArrayControl) {
         this.formArrayControl.removeAt(foundInAll.idx);
       }
@@ -243,13 +253,5 @@ export class EmailManagerComponent implements OnInit, OnDestroy, AfterViewInit {
       this.displayAddresses.addresses = this.allAddresses;
     }
     this.showingAllAddresses = !this.showingAllAddresses;
-  }
-
-  showMore(listType: 'all' | 'valid' | 'invalid') {
-    if (this.showingAllAddresses) {
-
-    }else{
-
-    }
   }
 }

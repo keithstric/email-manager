@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {EmailManagerAddress} from 'src/app/email-manager/email-manager.component';
 
 @Component({
   selector: 'app-root',
@@ -41,7 +42,6 @@ export class AppComponent implements OnInit {
       fg.get('invalid').setValue(fg.invalid);
       formArr.push(fg as FormGroup);
     });
-    console.log('emailAddresses fa=', formArr);
     this.formGroup = new FormGroup({
       addresses: formArr
     });
@@ -60,5 +60,11 @@ export class AppComponent implements OnInit {
     const properFormat = !emailRegex.test(emailAddress);
     const isAvengers = !emailAddress.includes('avengers.net');
     return properFormat === true && isAvengers === true;
+  }
+
+  sortAddresses(addr1: EmailManagerAddress, addr2: EmailManagerAddress) {
+    const a = addr1.email;
+    const b = addr2.email;
+    return a > b ? 1 : a < b ? -1 : 0;
   }
 }
