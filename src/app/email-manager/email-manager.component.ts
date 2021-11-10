@@ -87,16 +87,6 @@ export class EmailManagerComponent implements OnInit, OnDestroy, AfterViewInit {
     this._formArrayListener?.unsubscribe();
   }
 
-  get validAddressesTotal() {
-    const addrs = this.formArrayControl ? this.formArrayControl.value : this.allAddresses;
-    return addrs.filter(addr => !addr.invalid).length;
-  }
-
-  get invalidAddressesTotal() {
-    const addrs = this.formArrayControl ? this.formArrayControl.value : this.allAddresses;
-    return addrs.filter(addr => addr.invalid).length;
-  }
-
   get validAddresses() {
     const addrs = this.formArrayControl ? this.formArrayControl.value : this.allAddresses;
     const filtered = addrs.filter(addr => !addr.invalid);
@@ -104,7 +94,7 @@ export class EmailManagerComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.showingAllAddresses) {
       return {addresses: filtered, label: this.invalidContainerLabel, showMore};
     }else{
-      return {addresses: filtered.slice(0, this.emailDisplayCount), label: this.invalidContainerLabel, showMore};
+      return {addresses: filtered.slice(0, this.emailDisplayCount), label: this.validContainerLabel, showMore};
     }
   }
 

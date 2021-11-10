@@ -20,7 +20,7 @@
 <!-- Since all lists should show the same UI just use a template -->
 <ng-template #addressesTemplate let-list="addresses" let-label="label" let-showMore="showMore">
   <div *ngIf="list.length" class="flex-column">
-    <div class="container-label">{{label}}</div>
+    <div *ngIf="label" class="container-label">{{label}}</div>
     <div class="address-container flex-row">
       <div
         *ngFor="let address of list; let i = index"

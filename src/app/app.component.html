@@ -374,21 +374,24 @@
     <h2>Display Only</h2>
     <app-email-manager
       [allAddresses]="emailAddresses"
-      [displayOnly]="true">
+      [displayOnly]="true"
+      [emailDisplayCount]="10">
     </app-email-manager>
 
     <h2>Display Only with Invalid container</h2>
     <app-email-manager
       [allAddresses]="emailAddresses"
       [showInvalidContainer]="true"
-      [displayOnly]="true">
+      [displayOnly]="true"
+      [emailDisplayCount]="10">
     </app-email-manager>
 
     <h2>All addresses prevent dupes (some custom styles)</h2>
     <app-email-manager
       class="prevent-dupes-email-manager"
       [allAddresses]="emailAddresses"
-      [preventDuplicates]="true">
+      [preventDuplicates]="true"
+      [emailDisplayCount]="10">
     </app-email-manager>
   </div>
 

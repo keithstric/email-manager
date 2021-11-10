@@ -3,6 +3,10 @@
   align-items: center;
   justify-content: center;
 
+  h2 {
+    margin-top: 1rem;
+  }
+
   .email-manager-container {
     width: 600px;
 
@@ -11,9 +15,10 @@
       --tag-background-color: teal;
       --tag-invalid-color: black;
       --tag-invalid-background-color: orange;
-      --tag-invalid-border-color: orange;
+      --tag-invalid-border: 0 solid orange;
+      --email-address-max-width: 75px;
       --tag-font-size: 0.6rem;
-      --tag-padding: 0 5px;
+      --tag-padding: 0 0 0 2px;
       --delete-tag-button-border-radius: 50%;
       --delete-tag-button-background-color: white;
       --delete-tag-button-color: black;

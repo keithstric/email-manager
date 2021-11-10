@@ -1,10 +1,49 @@
+/**
+ * The following css variables are available
+ *
+ * --email-manager-border
+ * --email-manager-border-radius
+ * --email-manager-padding
+ * --duplicate-message-color
+ * --tags-container-margin
+ * --tag-margin
+ * --tag-border-radius
+ * --tag-border
+ * --tag-padding
+ * --tag-background-color
+ * --tag-color
+ * --tag-font-size
+ * --tag-font-weight
+ * --tag-invalid-background-color
+ * --tag-invalid-color
+ * --tag-invalid-border
+ * --email-address-max-width
+ * --email-address-text-overflow
+ * --email-address-overflow
+ * --delete-tag-button-margin-left
+ * --delete-tag-button-padding
+ * --delete-tag-button-background-color
+ * --delete-tag-button-border
+ * --delete-tag-button-color
+ * --delete-tag-button-font-size
+ * --delete-tag-button-line-height
+ * --container-label-margin
+ * --container-label-font-weight
+ * --container-label-font-size
+ * --container-label-padding
+ * --show-more-link-color
+ * --show-more-link-text-decoration
+ */
 .email-manager-container {
   display: flex;
   width: 100%;
+  border: var(--email-manager-border, 1px solid #afafaf);
+  border-radius: var(--email-manager-border-radius, 6px);
+  padding: var(--email-manager-padding, 5px);
 
   input {
-    margin-top: 1rem;
-    width: 100%;
+    margin: 0.5rem 0;
+    width: 95%;
   }
 
   .dupe-message {
@@ -15,20 +54,21 @@
   .address-container {
     display: flex;
     flex-wrap: wrap;
-    margin-bottom: 1rem;
+    align-items: center;
+    margin: var(--tags-container-margin, 0);
 
     .address-tag {
       animation: fadeIn 1s;
       align-items: center;
-      justify-content: center;
-      margin-right: var(--tag-margin-right, 0.5rem);
-      border-radius: 500px;
-      border: 1px solid var(--tag-border-color, darkgreen);
+      justify-content: space-between;
+      margin: var(--tag-margin, 0 0.5rem 0.5rem 0);
+      border-radius: var(--tag-border-radius, 500px);
+      border: var(--tag-border, 1px solid darkgreen);
       padding: var(--tag-padding, 5px);
       background-color: var(--tag-background-color, darkgreen);
       color: var(--tag-color, white);
-      margin-bottom: 0.5rem;
       font-size: var(--tag-font-size, 0.8rem);
+      font-weight: var(--tag-font-weight, 400);
 
       &:hover {
         cursor: pointer;
@@ -36,28 +76,28 @@
 
       &.invalid {
         background-color: var(--tag-invalid-background-color, red);
-        color: var(--tag-invalid-color, white);
-        border: 1px solid var(--tag-invalid-border-color, red);
+        color: var(--tag-invalid-color, black);
+        border: var(--tag-invalid-border, 1px solid red);
       }
 
       .email-address {
-        max-width: 150px;
-        text-overflow: ellipsis;
-        overflow: hidden;
+        max-width: var(--email-address-max-width, 150px);
+        text-overflow: var(--email-address-text-overflow, ellipsis);
+        overflow: var(--email-address-overflow, hidden);
       }
 
       .delete-button {
         display: flex;
         align-content: center;
         justify-content: center;
-        margin-left: var(--delete-button-margin-left, 10px);
+        margin-left: var(--delete-tag-button-margin-left, 10px);
         padding: var(--delete-tag-button-padding, 0);
         background-color: var(--delete-tag-button-background-color, transparent);
-        border-width: var(--delete-tag-button-border-width, 0);
+        border: var(--delete-tag-button-border, 0 solid transparent);
         border-radius: var(--delete-tag-button-border-radius, 0);
-        border-color: var(--delete-tag-button-border-color, transparent);
         color: var(--delete-tag-button-color, inherit);
         font-size: var(--delete-tag-button-font-size, inherit);
+        line-height: var(--delete-tag-button-line-height, 1);
 
         &:hover {
           cursor: pointer;
@@ -67,8 +107,9 @@
   }
 
   .container-label {
-    margin-bottom: var(--container-label-bottom-margin, 5px);
-    font-weight: var(--container-label-font-weight, 400);
+    margin: var(--container-label-margin, 5px 0);
+    font-weight: var(--container-label-font-weight, 600);
+    font-size: var(--container-label-font-size, 0.8rem);
     padding: var(--container-label-padding, 0);
   }
 
