@@ -113,6 +113,7 @@ export class EmailManagerComponent implements OnInit, OnDestroy, AfterViewInit {
       this._formArrayListener = this.formArrayControl?.valueChanges
         .subscribe((newValue: EmailManagerAddress[]) => {
           this.allAddresses = [...newValue];
+          this._updateAddresses();
         });
     }
   }
@@ -227,6 +228,7 @@ export class EmailManagerComponent implements OnInit, OnDestroy, AfterViewInit {
         this.formArrayControl.removeAt(foundInAll.idx);
       }
       this.deleteEvt.emit(foundInAll.email.email);
+      this.inputEl.nativeElement.value = '';
     }
   }
 
