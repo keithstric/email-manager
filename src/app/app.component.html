@@ -357,7 +357,7 @@
       [emailDisplayCount]="10">
     </app-email-manager>
 
-    <h2>Show Invalid Addresses in own container</h2>
+    <h2>Invalid Addresses in own container (custom validator)</h2>
     <app-email-manager
       [allAddresses]="emailAddresses"
       [showInvalidContainer]="true"
@@ -368,7 +368,8 @@
     <h3>Using Validators.email as validator</h3>
     <app-email-manager
       [formArrayControl]="formArray"
-      [showInvalidContainer]="true">
+      [showInvalidContainer]="true"
+      [emailDisplayCount]="10">
     </app-email-manager>
 
     <h2>Display Only</h2>

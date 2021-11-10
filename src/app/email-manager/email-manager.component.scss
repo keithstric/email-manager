@@ -33,6 +33,7 @@
  * --container-label-padding
  * --show-more-link-color
  * --show-more-link-text-decoration
+ * --show-more-link-margin
  */
 .email-manager-container {
   display: flex;
@@ -116,6 +117,7 @@
   .show-more-link {
     color: var(--show-more-link-color, blue);
     text-decoration: var(--show-more-link-text-decoration, underline);
+    margin: var(--show-more-link-margin, 0 0 .5rem 0);
 
     &:hover {
       cursor: pointer;
